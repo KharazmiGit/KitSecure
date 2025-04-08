@@ -2,9 +2,7 @@ from rest_framework import serializers
 from . import models
 
 
-
-
-# create and retrive data ==> usr's actions 
+# create and retrive data ==> usr's actions
 class UserActionSerializers(serializers.ModelSerializer):
     class Meta:
         model = models.UserAction
@@ -13,6 +11,3 @@ class UserActionSerializers(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return models.UserAction.objects.create(**validated_data)
-    
-    
-    

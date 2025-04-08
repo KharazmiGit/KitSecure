@@ -1,8 +1,11 @@
+from datetime import timedelta
 from pathlib import Path
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+from django.urls import reverse_lazy
 
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
@@ -15,7 +18,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -25,10 +27,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
+
     # my apps 
-    'account' , 
-    'writebot', 
+    'account',
+    'writebot',
+    'auth_process',
+
+    # frameworks
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -39,6 +45,9 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    # custom middleware
+    # 'auth_process.middleware.KeycloakAuthMiddleware',
 ]
 
 ROOT_URLCONF = 'KitSecure.urls'
@@ -61,7 +70,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'KitSecure.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
@@ -71,7 +79,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
@@ -90,7 +97,6 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -114,3 +120,67 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# region keycloak setting
+
+KEYCLOAK_URL = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/token"
+KEYCLOAK_CLIENT_ID = "KitAuthCliID"
+KEYCLOAK_CLIENT_SECRET = "WLkcM3GYlZQzJyL9wW1wNgHQKwnntjXk"
+
+OIDC_RP_CLIENT_ID = "KitAuthCliIDd"
+OIDC_RP_CLIENT_SECRET = "WLkcM3GYlZQzJyL9wW1wNgHQKwnntjXk"
+OIDC_OP_JWKS_ENDPOINT = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/certs"
+OIDC_OP_AUTHORIZATION_ENDPOINT = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/auth"
+OIDC_OP_TOKEN_ENDPOINT = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/token"
+OIDC_OP_USER_ENDPOINT = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/userinfo"
+
+# endregion
+
+
+# thing that have relation to login
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "Authorization",
+    "Content-Type",
+]
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "PATCH",
+    "DELETE",
+    "OPTIONS",
+]
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+    'AUTH_HEADER_TYPES': ('Bearer',),
+}
+
+# REST framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
+
+# endregion
+
+
+# region API setting
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Secure API',
+    'DESCRIPTION': 'Authentication process',
+    'VERSION': '0.28.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    # OTHER SETTINGS
+}
+
+# endregion

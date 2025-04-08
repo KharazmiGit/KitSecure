@@ -8,8 +8,9 @@ from openpyxl.utils import get_column_letter
 from io import BytesIO
 import json
 
+
 # --- API to Create Tracked Actions ---
-class CreateTrackedUserActions(generics.CreateAPIView): 
+class CreateTrackedUserActions(generics.CreateAPIView):
     queryset = UserAction.objects.all()
     serializer_class = serializers.UserActionSerializers
 
@@ -17,9 +18,11 @@ class CreateTrackedUserActions(generics.CreateAPIView):
         if self.request.user.is_authenticated:
             serializer.save(user=self.request.user)
         else:
-            serializer.save()  
+            serializer.save()
 
-# --- Load from DB ---
+        # --- Load from DB ---
+
+
 def get_user_actions_from_db():
     actions = UserAction.objects.all()
     actions_data = []
@@ -29,6 +32,7 @@ def get_user_actions_from_db():
         else:
             actions_data.append(action.json_data)  # Already a list/dict
     return actions_data
+
 
 # --- Convert JSON to Python Code ---
 def convert_json_to_python_code(json_data):
@@ -41,6 +45,7 @@ def convert_json_to_python_code(json_data):
         elif action['type'] == 'click':
             python_code.append(f"browser.find_element_by_id('{action['target']}').click()")
     return '\n'.join(python_code)
+
 
 # --- Download as Excel File ---
 def download_python_code_excel(request):

@@ -20,6 +20,3 @@ class UserAction(models.Model):
     def __str__(self):
         return f"Actions of {self.user.username} at {self.created_at}"
 
-
-
-
