@@ -55,6 +55,7 @@ class User(AbstractBaseUser):
     personnel_code = models.CharField(max_length=100, null=True, blank=True, unique=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    keycloak_id = models.CharField(max_length=100, unique=True, null=True, blank=True)
 
     objects = UserManager()
 

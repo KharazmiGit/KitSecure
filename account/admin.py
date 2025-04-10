@@ -15,6 +15,7 @@ class UserAdmin(BaseUserAdmin):
 
     fieldsets = [
         (None, {'fields': ['username', 'password']}),
+        ('important info', {'fields': ['keycloak_id']}),
         ('Personal info', {'fields': ['email', 'personnel_code']}),
         ('Permissions', {'fields': ['is_admin', 'is_active']}),
     ]
@@ -34,10 +35,8 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ['username', 'email', 'personnel_code']
     ordering = ['username']
     filter_horizontal = []
-
-
+    readonly_fields = ['keycloak_id']
 
 
 # Register the new UserAdmin
 admin.site.register(User, UserAdmin)
-
