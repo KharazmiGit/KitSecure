@@ -9,6 +9,7 @@ from django.urls import reverse_lazy
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+load_dotenv()
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
@@ -17,8 +18,6 @@ SECRET_KEY = os.getenv("django_secret_key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-load_dotenv()
 
 ALLOWED_HOSTS = []
 
@@ -80,7 +79,6 @@ WSGI_APPLICATION = 'KitSecure.wsgi.application'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
-
 DATABASES = {
     'default': {
         'ENGINE': os.getenv("db_engine"),
@@ -138,16 +136,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # region keycloak setting
 
-KEYCLOAK_URL = os.getenv("KEYCLOAK_URL")
-KEYCLOAK_CLIENT_ID = os.getenv("KEYCLOAK_CLIENT_ID")
-KEYCLOAK_CLIENT_SECRET = os.getenv("KEYCLOAK_CLIENT_SECRET")
+# Keycloak Configuration
+KEYCLOAK_URL = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/token"
+KEYCLOAK_CLIENT_ID = "KitAuthCliID"
+KEYCLOAK_CLIENT_SECRET = "oVZgpYXSM9GlZf8qUadytfgnQp08r8qX"
 
-OIDC_RP_CLIENT_ID = os.getenv("OIDC_RP_CLIENT_ID")
-OIDC_RP_CLIENT_SECRET = os.getenv("OIDC_RP_CLIENT_SECRET")
-OIDC_OP_JWKS_ENDPOINT = os.getenv("OIDC_OP_JWKS_ENDPOINT")
-OIDC_OP_AUTHORIZATION_ENDPOINT = os.getenv("OIDC_OP_AUTHORIZATION_ENDPOINT")
-OIDC_OP_TOKEN_ENDPOINT = os.getenv("OIDC_OP_TOKEN_ENDPOINT")
-OIDC_OP_USER_ENDPOINT = os.getenv("OIDC_OP_USER_ENDPOINT")
+# Keycloak Endpoints
+OIDC_RP_CLIENT_ID = "KitAuthCliID"
+OIDC_RP_CLIENT_SECRET = "oVZgpYXSM9GlZf8qUadytfgnQp08r8qX"
+OIDC_OP_JWKS_ENDPOINT = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/certs"
+OIDC_OP_AUTHORIZATION_ENDPOINT = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/auth"
+OIDC_OP_TOKEN_ENDPOINT = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/token"
+OIDC_OP_USER_ENDPOINT = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/userinfo"
 
 # endregion
 

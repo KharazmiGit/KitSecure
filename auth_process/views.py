@@ -77,6 +77,7 @@ def login_logic_view(request):
             "token_type": token_data.get("token_type"),
             "user_created": created,
             "keycloak_id": keycloak_user_id,
+            "userId": user.id,
             "message": "User logged in successfully"
         }, status=status.HTTP_200_OK)
 

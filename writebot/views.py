@@ -46,41 +46,57 @@ def get_user_actions_from_db(keycloak_id):
 
 # --- Convert JSON to Python Code ---
 def convert_json_to_python_code(json_data):
-    # Static setup code including imports and browser initialization
     python_code = [
-        "from selenium import webdriver",
+        "import selenium ",
+        "from selenium.webdriver.firefox.service import Service",
         "from selenium.webdriver.common.by import By",
+        "from selenium.webdriver.common.action_chains import ActionChains",
         "from selenium.webdriver.common.keys import Keys",
         "import time",
         "",
-        "browser = webdriver.Chrome()",  # Ensure chromedriver is in PATH
+        "browser = webdriver.Chrome()  # Ensure chromedriver is in PATH",
         "browser.implicitly_wait(10)  # Adjust timeout as needed",
         "",
         "try:",
     ]
 
-    # Process each action and indent under the try block
+    current_url = None
+
     for action in json_data:
-        if action['type'] == 'visit':
-            line = f"browser.get('{action['url']}')"
-        elif action['type'] == 'input':
-            line = f"browser.find_element(By.ID, '{action['target']}').send_keys('{action['value']}')"
-        elif action['type'] == 'click':
-            line = f"browser.find_element(By.ID, '{action['target']}').click()"
-        else:
-            continue  # Skip unknown actions
+        action_type = action.get("type")
+        url = action.get("url")
 
-        # Indent each action line by 4 spaces
-        python_code.append(f"    {line}")
+        # Navigate if the URL changes
+        if url and url != current_url:
+            python_code.append(f"    browser.get('{url}')")
+            current_url = url
 
-    # Add cleanup code
+        if action_type == "click":
+            element = action.get("element", {})
+            el_id = element.get("id")
+            tag_name = element.get("tagName", "").lower()
+            value = element.get("value", "").strip()
+
+            if el_id:
+                selector = f"browser.find_element(By.ID, '{el_id}')"
+            elif value:
+                # Use XPath for elements without ID but with text content
+                selector = f"browser.find_element(By.XPATH, \"//{tag_name}[text()='{value}']\")"
+            else:
+                # Fallback to tag name — could be risky if multiple exist
+                selector = f"browser.find_element(By.TAG_NAME, '{tag_name}')"
+
+            line = f"{selector}.click()"
+            python_code.append(f"    {line}")
+
+        # You can add support for "input", "hover", "scroll", etc. here later
+
     python_code.extend([
         "finally:",
         "    browser.quit()",
     ])
 
     return '\n'.join(python_code)
-
 
 # --- Download as Excel File ---
 def download_python_code_excel(request):
@@ -118,6 +134,4 @@ def download_python_code_excel(request):
     response['Content-Disposition'] = 'attachment; filename=python_code.xlsx'
     return response
 
-
 # endregion
-
