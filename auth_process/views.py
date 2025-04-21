@@ -21,10 +21,19 @@ def login_logic_view(request):
 
     username = data.get("username")
     password = data.get("password")
+    recaptcha_token = data.get("recaptcha_token")
 
-    if not username or not password:
+    if not username or not password or not recaptcha_token:
         return Response(
-            {"error": "Username and password are required."},
+            {"error": "Username, password, and reCAPTCHA are required."},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    # reCAPTCHA validation
+    success, result = verify_recaptcha_token(recaptcha_token)
+    if not success:
+        return Response(
+            {"error": "Invalid reCAPTCHA", "details": result},
             status=status.HTTP_400_BAD_REQUEST
         )
 
@@ -106,3 +115,19 @@ def get_keycloak_id_from_request(request):
     except Exception as e:
         print("Token decoding error:", e)
         return None
+
+
+def verify_recaptcha_token(token):
+    try:
+        response = requests.post(
+            "https://www.google.com/recaptcha/api/siteverify",
+            data={
+                "secret": settings.RECAPTCHA_SECRET_KEY,
+                "response": token,
+            },
+            timeout=5  # timeout for Google's reCAPTCHA verification
+        )
+        result = response.json()
+        return result.get("success", False), result
+    except Exception as e:
+        return False, {"error": str(e)}

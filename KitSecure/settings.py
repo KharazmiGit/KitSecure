@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
     # custom middleware
-    # 'auth_process.middleware.KeycloakAuthMiddleware',
+    'auth_process.middleware.KeycloakAuthMiddleware',
 ]
 
 ROOT_URLCONF = 'KitSecure.urls'
@@ -205,3 +205,7 @@ SPECTACULAR_SETTINGS = {
 }
 
 # endregion
+
+
+RECAPTCHA_SITE_KEY = "6LcKFuoqAAAAAJHaXN3Ev6GFRvZnM5pN6ORJhLCt"
+RECAPTCHA_SECRET_KEY = "6LcKFuoqAAAAAEUByP3a_Pay0xp-nXgjqLxe4ekr"
