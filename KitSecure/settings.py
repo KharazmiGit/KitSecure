@@ -137,17 +137,17 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # region keycloak setting
 
 # Keycloak Configuration
-KEYCLOAK_URL = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/token"
+KEYCLOAK_URL = "http://192.168.100.20:8080/realms/KitAuthRealm/protocol/openid-connect/token"
 KEYCLOAK_CLIENT_ID = "KitAuthCliID"
 KEYCLOAK_CLIENT_SECRET = "oVZgpYXSM9GlZf8qUadytfgnQp08r8qX"
 
 # Keycloak Endpoints
 OIDC_RP_CLIENT_ID = "KitAuthCliID"
 OIDC_RP_CLIENT_SECRET = "oVZgpYXSM9GlZf8qUadytfgnQp08r8qX"
-OIDC_OP_JWKS_ENDPOINT = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/certs"
-OIDC_OP_AUTHORIZATION_ENDPOINT = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/auth"
-OIDC_OP_TOKEN_ENDPOINT = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/token"
-OIDC_OP_USER_ENDPOINT = "http://localhost:8080/realms/KitAuthRealm/protocol/openid-connect/userinfo"
+OIDC_OP_JWKS_ENDPOINT = "http://192.168.100.20:8080/realms/KitAuthRealm/protocol/openid-connect/certs"
+OIDC_OP_AUTHORIZATION_ENDPOINT = "http://192.168.100.20:8080/realms/KitAuthRealm/protocol/openid-connect/auth"
+OIDC_OP_TOKEN_ENDPOINT = "http://192.168.100.20:8080/realms/KitAuthRealm/protocol/openid-connect/token"
+OIDC_OP_USER_ENDPOINT = "http://192.168.100.20:8080/realms/KitAuthRealm/protocol/openid-connect/userinfo"
 
 # endregion
 
